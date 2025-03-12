@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客製化水晶手環互動網站</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .bead-options img {
+            width: 75px;
+            height: 75px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            transition: transform 0.2s;
+        }
+        .bead-options img:hover {
+            transform: scale(1.2);
+        }
+        .bracelet-preview {
+            margin-top: 50px;
+            width: 400px;
+            height: 400px;
+            position: relative;
+            margin: 0 auto;
+        }
+        .bracelet-preview img {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: center -180px;
+        }
+        .bead-label {
+            display: block;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .filter-container {
+            margin-bottom: 20px;
+        }
+        .filter-container select {
+            margin: 0 10px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>點擊下方珠子以製作你的專屬水晶手環</h2>
+
+<div class="filter-container">
+    <select id="colorFilter" onchange="filterBeads()">
+        <option value="all">所有顏色</option>
+        <option value="gold">金色</option>
+        <option value="pink">粉色</option>
+    </select>
+    <select>
+        <option>能量</option>
+    </select>
+    <select>
+        <option>尺寸</option>
+    </select>
+    <select>
+        <option>價格</option>
+    </select>
+</div>
+
+<div class="bead-options">
+    <div style="display:inline-block;" data-color="gold">
+        <img src="https://i.imgur.com/1DHEWeg.png" alt="金髮晶" onclick="addBead(this)">
+        <span class="bead-label">金髮晶</span>
+    </div>
+    <div style="display:inline-block;" data-color="pink">
+        <img src="https://i.imgur.com/ekagjAo.png" alt="粉兔毛" onclick="addBead(this)">
+        <span class="bead-label">粉兔毛</span>
+    </div>
+</div>
+
+<h3>你的手環預覽：</h3>
+<div class="bracelet-preview" id="braceletPreview"></div>
+
+<script>
+let beadCount = 0;
+const totalBeads = 22;
+const radius = 160;
+
+function addBead(imgElement) {
+    if (beadCount >= totalBeads) return;
+
+    const preview = document.getElementById('braceletPreview');
+    const newBead = document.createElement('img');
+    newBead.src = imgElement.src;
+    newBead.alt = imgElement.alt;
+
+    const angle = beadCount * (360 / totalBeads);
+    const radian = angle * (Math.PI / 180);
+
+    newBead.style.left = `calc(50% + ${radius * Math.cos(radian)}px - 34px)`;
+    newBead.style.top = `calc(50% + ${radius * Math.sin(radian)}px - 34px)`;
+
+    preview.appendChild(newBead);
+    beadCount++;
+}
+
+function filterBeads() {
+    const colorFilter = document.getElementById('colorFilter').value;
+    const beads = document.querySelectorAll('.bead-options div');
+
+    beads.forEach(bead => {
+        if (colorFilter === 'all' || bead.getAttribute('data-color') === colorFilter) {
+            bead.style.display = 'inline-block';
+        } else {
+            bead.style.display = 'none';
+        }
+    });
+}
+
+function angleToRadian(angle) {
+    return angle * (Math.PI / 180);
+}
+</script>
+
+</body>
+</html>
